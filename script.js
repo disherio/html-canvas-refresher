@@ -1,12 +1,39 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
+let mouseX;
+let mouseY;
+
+function updateMousePosition(canvas, event) {
+    let rect = canvas.getBoundingClientRect();
+    mouseX = event.clientX - rect.left;
+    mouseY = event.clientY - rect.top;
+    //console.log([mouseX, mouseY])
+}
+
+function getAngleFromVector(){
+    var angle = Math.atan2()
+}
+
+function normalize(x, y) {
+    let length = Math.sqrt(x*x+y*y);
+    let normalX = x/length;
+    let normalY = y/length;
+    return [normalX, normalY]
+}
+
 const numberOfParticles = 200;
 
 let particlesArray = [];
 
 const ship = new Image();
 ship.src = 'bitmap2.png'
+
+// function d2r(degrees)
+// {
+//   var pi = Math.PI;
+//   return degrees * (pi/180);
+// }
 
 class Particle {
     constructor(){
@@ -21,14 +48,15 @@ class Particle {
         //ctx.fillRect(this.x, this.y, this.size, this.size);
         ctx.save();
         ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle * Math.PI/360);
+        ctx.rotate(this.angle);
         ctx.fillStyle = 'red';
         //ctx.fillRect(0,0, canvas.width, canvas.height);
         ctx.drawImage(ship, 0 - this.size/2, 0- this.size/2, this.size, this.size)
         ctx.restore();
     }
     update() {
-        this.angle += 1;
+
+        this.angle = Math.atan2(this.y-mouseY, this.x-mouseX)-(Math.PI/2);
         if (this.y > canvas.height) {
             this.y = 0  - this.size;
             this.x = Math.random() * canvas.width;
@@ -36,9 +64,15 @@ class Particle {
             this.speed = Math.random() * 5 + 1;
         }
 
-        this.y += this.speed;
+        this.y += 1
+        // this.x += (Math.cos(d2r(this.angle-90)))
+        // this.y += (Math.sin(d2r(this.angle-90)))
     }
 }
+
+canvas.addEventListener("mousemove", (e) => {
+    updateMousePosition(canvas, e)
+})
 
 const particle1 = new Particle();
 
@@ -48,5 +82,6 @@ function animate() {
     particle1.draw();
     requestAnimationFrame(animate);
 }
+
 
 animate();
