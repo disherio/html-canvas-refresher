@@ -1,8 +1,8 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-let mouseX;
-let mouseY;
+let mouseX = 400;
+let mouseY = 400;
 
 function updateMousePosition(canvas, event) {
     let rect = canvas.getBoundingClientRect();
@@ -51,7 +51,7 @@ class Particle {
         ctx.rotate(this.angle);
         ctx.fillStyle = 'red';
         //ctx.fillRect(0,0, canvas.width, canvas.height);
-        ctx.drawImage(ship, 0 - this.size/2, 0- this.size/2, this.size, this.size)
+        ctx.drawImage(ship, 0 - this.size/2, 0- this.size/2, this.size, this.size*1.5)
         ctx.restore();
     }
     update() {
@@ -63,8 +63,11 @@ class Particle {
             this.size = Math.random() * 100 + 50;
             this.speed = Math.random() * 5 + 1;
         }
+        if (Math.abs(this.x-mouseX) > 10  || Math.abs(this.y-mouseY) > 10) {
+            this.x -= normalize(this.x-mouseX, this.y-mouseX)[0]
+            this.y -= normalize(this.x-mouseX, this.y-mouseY)[1]
+        }
 
-        this.y += 1
         // this.x += (Math.cos(d2r(this.angle-90)))
         // this.y += (Math.sin(d2r(this.angle-90)))
     }
